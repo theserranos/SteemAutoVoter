@@ -64,7 +64,7 @@ function vote(){
 //  var steem = require('steem');
   var voter="nomadsteem";
   var username="nomadsteem";
-  var password="5JiZuiBkaGkAyiQxdtMsuxz3rWuRYoFWSN2xZTgx2Y9wagZQV6f";
+  var password="5JiZuiBkaGkAyiQxdtxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
   var author= $("#vauthor").val();//"fisteganos";
   var permlink= $("#vpostlink").val();;
   var weight=50;

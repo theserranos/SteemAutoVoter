@@ -1,4 +1,5 @@
 var AccInfo=null 
+var r=null;
 
 function showAccountInfo2(){
 	
@@ -6,8 +7,12 @@ function showAccountInfo2(){
       $("#marcoaccinfo").show();
       $("#accinfo").show();
       var aux = null;
+
+
+
        steem.api.getAccounts([$("#accsearch").val()], function(err, response){
-       	AccInfo=response[0];
+
+       	nomadsteemAccInfo=response[0];
             
        for (var key in response[0]){
        	  //$("#cuerpo").append(aux);
@@ -22,64 +27,158 @@ function showAccountInfo2(){
     }
 
 
-function getState(){ 
-  var aux = null;
-  steem.api.getState('/trends/funny', function(err, result) {
-	console.log(err, result['props']);
-       for (var key in result['props']){
-           aux='<tr><td>' + key +'</td><td>' + result['props'][key] +'</td></tr>' + aux;
-          console.log('--------- aux ' +aux);;
-       }
-       console.log('--------- aux ' +aux);
-   $("#cuerpogt").show();
-   $("#cuerpogt").html(aux);
-});
-
-  
-}
-
-
-function getHistory(){
-  var aux = null;
-	steem.api.getAccountHistory($("#vhistoryccount").val(), 3000,2000 , function(err, result) {
-	console.log(err, result);
-      for (i = 0; i < result.length; i++){
-           aux='<tr><td>' + JSON.stringify(result[i]) +'</td><td>' +'----'+'</td></tr>' + aux;
-        //JSON.stringify(result[i][1].op[1]) 
-       }
-       console.log('--------- aux ' +aux);
-   $("#cuerpogt").show();
-   $("#cuerpogt").html(aux);
-});
-
-  
-}
-
-
-
 
 
 function vote(){
   console.log('voting');
-//  var steem = require('steem');
+
   var voter="nomadsteem";
   var username="nomadsteem";
-  var password="5JiZuiBkaGkAyiQxdtxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+  var password=$("#PostKey").val();;
   var author= $("#vauthor").val();//"fisteganos";
-  var permlink= $("#vpostlink").val();;
-  var weight=50;
+  var permlink= r[0].permlink;
+  var weight=100;
   
-var wif = steem.auth.toWif(username, password, 'posting');
 
-	wif=password;
-//	  console.log('---pkey' + wif);
-steem.broadcast.vote(wif, voter, author, permlink, weight, function(err, result) {
+steem.broadcast.vote(password, voter, author, permlink, weight, function(err, result) {
 	console.log(err, result);
-	$("#vresponse").val(result);
+	//$("#vresponse").val(result);
 });
 }
 
   
+
+
+
+  
+
+function CleanNav(){
+	$("#marcoaccinfo").hide();$("#gettrend").hide();$("#voting").hide();
+	$("#Subscribe").hide();
+	$("#votbot").hide();
+	$("#accinfo").hide();
+	
+	
+}
+
+
+function CheckVoted(){
+//last post by nomadsteem
+      steem.api.getDiscussionsByAuthorBeforeDate('nomadsteem', '', '2018-03-20T20:27:30', 1, function(err, r) {
+  console.log(err, r);
+
+
+for (var key in r[0].active_votes){
+       	  //$("#cuerpo").append(aux);$("#vvoteauth").val()
+       	   if (r[0].active_votes[key].voter=='steemalf'){
+           vfound='true';
+       	   }
+       }
+
+     
+
+  if (vfound!='true'){
+  	vote();
+  }
+
+       discussions();
+       });
+
+	
+}
+
+
+
+
+function discussions(){
+
+    
+
+    var categ = $("#Tagfilter").val().split(",");
+	var vnumcateg=categ.length;
+	var vcatsel=categ[Math.floor((Math.random() *vnumcateg))];
+	console.log('===Categ:', vcatsel);
+
+	var query = {tag:vcatsel, limit:"30"}; 
+
+
+
+steem.api.getDiscussionsByCreated(query, function(err, result) {
+	console.log(Math.floor((Math.random() * 30) + 1));
+
+	votediscussion(result[Math.floor((Math.random() * 30) + 1)]);
+});
+}
+
+
+
+function votediscussion(r){
+	 console.log('voting');
+	 
+
+  var voter=$("#vvoteperm").val();
+  var username=$("#vvoteauth").val();
+  var password=$("#PostKey").val();//"";
+  var author= r.author ;//$("#vvoteauthor").val();//"fisteganos";
+  var permlink=r.permlink;// $("#vvoteperm").val();
+  var weight= $("#VoteP").val()*100 ; //+Math.floor((Math.random() * 100) + 1);
+  
+
+ 	wif=password;
+	var vres=null;
+	var voteresp=null;
+	
+steem.broadcast.vote(wif, voter, author, permlink, weight, function(err, voteresp) {
+	if (err){
+		 vres='-- Error : --',err.message;
+		console.log('----------',vres);
+		var vfail=$("#votefail")[0].innerText;
+           $("#votefail")[0].innerText=parseInt(vfail)+1;
+		}
+	else
+		{
+	console.log('block',voteresp.ref_block_num);
+   vres='bloque : ' + voteresp.ref_block_num;
+		}
+	
+steem.api.getAccounts([voter], function(err, response){
+       	AccInfo=response[0];
+});
+        var old_votingPw=AccInfo.voting_power/100;  
+        var vp='NC';
+        if(AccInfo){
+        vp=	AccInfo.voting_power/100;
+        }        
+         if( old_votingPw>vp){
+         	vcolor='alert-success'
+         }else{
+         	vcolor='alert-danger'
+         }
+        var valert="<div class='alert " + vcolor +"'>" + vp + "</div>";
+		var d = new Date(); var ahora=d.getHours()+': '+ d.getMinutes() + ': ' + d.getSeconds()
+	 document.getElementById("votedtable").insertRow(1).innerHTML = ("<td>" + ahora +'</td><td>' +r.author 
+			+ '</td><td>'+ $("#VoteP").val() +'</td><td>'+ r.permlink+'</td><td>'+ vres+'</td><td>'+ valert +"</td>");
+
+
+			var vsuccess=$("#votesuccess")[0].innerText;
+
+	
+	$("#votesuccess")[0].innerText=parseInt(vsuccess)+1;
+});
+	
+	
+	
+	
+}
+
+
+function regvote(){
+	CheckVoted();
+setTimeout(function(){ regvote(); }, $("#RefreshTime").val()*1000);
+}
+
+
+
 
 
 function subscribe(){
@@ -108,117 +207,42 @@ steem.api.setSubscribeCallback('1', 'false', function(err, result) {
 
 
 }
+function getState(){ 
+  var aux = null;
+  steem.api.getState('/trends/funny', function(err, result) {
+	console.log(err, result['props']);
+       for (var key in result['props']){
+           aux='<tr><td>' + key +'</td><td>' + result['props'][key] +'</td></tr>' + aux;
+          console.log('--------- aux ' +aux);;
+       }
+       console.log('--------- aux ' +aux);
+   $("#cuerpogt").show();
+   $("#cuerpogt").html(aux);
+});
+
+}
+
+function getHistory(){
+  var aux = null;
+	steem.api.getAccountHistory($("#vhistoryccount").val(), 3000,2000 , function(err, result) {
+	console.log(err, result);
+      for (i = 0; i < result.length; i++){
+           aux='<tr><td>' + JSON.stringify(result[i]) +'</td><td>' +'----'+'</td></tr>' + aux;
+        //JSON.stringify(result[i][1].op[1]) 
+       }
+       console.log('--------- aux ' +aux);
+   $("#cuerpogt").show();
+   $("#cuerpogt").html(aux);
+});
+
+  
+}
+
+
 
 function Feed(){
 	CleanNav();$('#Subscribe').show();
 steem.api.getFeedHistory(function(err, result) {
-  console.log(err, result);
-});
-}
-
-
-
-
-function getContentAsync(){
-//	CleanNav();$('#Navpruebas').show();
-	console.log('----- suth',$('#npauthor').val());
-	console.log($('#nppostlink').val());
-const resultP = steem.api.getContentAsync($('#npauthor').val(),$('#nppostlink').val());
-resultP.then(result => 
-						 $('#npresponse').val(result.body)
-						
-						);
-}
-  
-
-function CleanNav(){
-	$("#marcoaccinfo").hide();$("#gettrend").hide();$("#voting").hide();
-	$("#Subscribe").hide();
-	$("#votbot").hide();
-	$("#accinfo").hide();
-	
-	
-}
-
-
-
-function discussions(){
-var categ = $("#Tagfilter").val().split(",");
-	var vnumcateg=categ.length;
-	var vcatsel=categ[Math.floor((Math.random() *vnumcateg))];
-	console.log('===Categ:', vcatsel);
-
-	var query = {tag:vcatsel, limit:"30"}; 
-
-steem.api.getDiscussionsByCreated(query, function(err, result) {
-	console.log(Math.floor((Math.random() * 30) + 1));
-
-	votediscussion(result[Math.floor((Math.random() * 30) + 1)]);
-});
-}
-
-
-
-function votediscussion(r){
-	 console.log('voting');
-	 
-
-  var voter=$("#vvoteperm").val();
-  var username=$("#vvoteauth").val();
-  var password=$("#PostKey").val();//"";
-  var author= r.author ;//$("#vvoteauthor").val();//"fisteganos";
-  var permlink=r.permlink;// $("#vvoteperm").val();
-  var weight= $("#VoteP").val()*100 ; //+Math.floor((Math.random() * 100) + 1);
-  
-//var wif = steem.auth.toWif(username, password, 'posting');
-
- 	wif=password;
-	var vres=null;
-	var voteresp=null;
-	
-steem.broadcast.vote(wif, voter, author, permlink, weight, function(err, voteresp) {
-	if (err){
-		 vres='-- Error : --',err.message;
-		console.log('----------',vres);
-		var vfail=$("#votefail")[0].innerText;
-           $("#votefail")[0].innerText=parseInt(vfail)+1;
-		}
-	else
-		{
-	console.log('block',voteresp.ref_block_num);
-   vres='bloque : ' + voteresp.ref_block_num;
-		}
-	
-steem.api.getAccounts([voter], function(err, response){
-       	AccInfo=response[0];
-});
-        var vp='NC';
-        if(AccInfo){
-        vp=	AccInfo.voting_power
-        }        
-
-
-		var d = new Date(); var ahora=d.getHours()+': '+ d.getMinutes() + ': ' + d.getSeconds()
-	 document.getElementById("votedtable").insertRow(1).innerHTML = ('<td>' + ahora +'</td><td>' +r.author 
-			+ '</td><td>'+ $("#VoteP").val() +'</td><td>'+ r.permlink+'</td><td>'+ vres+'</td><td>'+ vp +'</td>');
-			var vsuccess=$("#votesuccess")[0].innerText;
-	
-	$("#votesuccess")[0].innerText=parseInt(vsuccess)+1;
-});
-	
-	
-	
-	
-}
-
-
-function regvote(){
-	discussions();
-setTimeout(function(){ regvote(); }, $("#RefreshTime").val()*1000);
-}
-
-function getComments(){
-steem.api.getDiscussionsByComments(['life'], function(err, result) {
   console.log(err, result);
 });
 }

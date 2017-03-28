@@ -23,13 +23,13 @@
     <ul class="nav navbar-nav">
 	
       <li><a href="#" onclick="CleanNav();$('#votbot').show();">Voting Bot</a></li> 
-      <li><a href="#" onclick="CleanNav();$('#gettrend').show()">Get Account History </a></li>
+      <li><a href="#" onclick="CleanNav();$('#gethistory').show()">Get Account History </a></li>
     
     </ul>
 
 	   <ul class="nav navbar-nav navbar-right">
-	    <li class="active"  ><a href="#" onclick="CleanNav();showAccountInfo2()">Account Info</a></li>
-			<form class="navbar-form navbar-left" onclick="CleanNav();showAccountInfo2()";>
+	    <li class="active"  ><a href="#" onclick="CleanNav();showAccountInfo()">Account Info</a></li>
+			<form class="navbar-form navbar-left" onclick="CleanNav();showAccountInfo()";>
 			  <div class="input-group">
 				<input id="accsearch" type="text" class="form-control" placeholder="Account name p.e. steemalf">
 				<div class="input-group-btn">
@@ -83,12 +83,13 @@
   
   
   
-  <div class="container" id="gettrend">
+  <div class="container" id="gethistory">
     <h2>Get Account History</h2>
   
      <br>
       <div class="row">
     <div class="col-xs-3"><button type="button" class="btn btn-info" onclick="getHistory()">Get history  </button> </div>
+	<div class="col-xs-3"><button type="button" class="btn btn-info" onclick="quedes()">prueba desayuno  </button> </div>
       </div>
   
     <hr>
@@ -125,9 +126,9 @@
       <div class="input-group  col-sm-6">
         
         <span class="input-group-addon">Voter  <i class="glyphicon glyphicon-user"></i></span>
-        <input id="vvoteperm" type="text" class="form-control col-sm-2" name="email" placeholder="nomadsteem">
+        <input id="bvoter" type="text" class="form-control col-sm-2" name="email" placeholder="nomadsteem">
         <span class="input-group-addon">UserName<i class="glyphicon  glyphicon-user"></i></span>
-        <input id="vvoteauthor" type="text" class="form-control col-sm-2" name="text" placeholder="nomadsteem">
+        <input id="busername" type="text" class="form-control col-sm-2" name="text" placeholder="nomadsteem">
       </div>
     <br>
       </div>
@@ -217,7 +218,16 @@
   
   
   
-  <script>CleanNav();$("#inicio").show()</script>
+  <script>
+$(document).ready(function(){
+CleanNav();
+$("#inicio").show();
+ $("#bvoter").val(localStorage.voter);
+ $("#busername").val(localStorage.username);
+  $("#PostKey").val(localStorage.PostingKey);
+
+
+})</script>
   
 </body>
 </html>

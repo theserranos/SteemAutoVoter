@@ -12,7 +12,7 @@ function showAccountInfo2(){
 
        steem.api.getAccounts([$("#accsearch").val()], function(err, response){
 
-       	nomadsteemAccInfo=response[0];
+       	nomadsteemAccInfo=response[0]; 
             
        for (var key in response[0]){
        	  //$("#cuerpo").append(aux);
@@ -57,6 +57,7 @@ function CleanNav(){
 	$("#Subscribe").hide();
 	$("#votbot").hide();
 	$("#accinfo").hide();
+	$("#inicio").hide();
 	
 	
 }
@@ -119,6 +120,14 @@ function votediscussion(r){
   var voter=$("#vvoteperm").val();
   var username=$("#vvoteauth").val();
   var password=$("#PostKey").val();//"";
+
+
+
+
+  if(!r){
+  	console.log ('--noo hay post ');
+  }
+
   var author= r.author ;//$("#vvoteauthor").val();//"fisteganos";
   var permlink=r.permlink;// $("#vvoteperm").val();
   var weight= $("#VoteP").val()*100 ; //+Math.floor((Math.random() * 100) + 1);
@@ -130,34 +139,33 @@ function votediscussion(r){
 	
 steem.broadcast.vote(wif, voter, author, permlink, weight, function(err, voteresp) {
 	if (err){
-		 vres='-- Error : --',err.message;
-		console.log('----------',vres);
-		var vfail=$("#votefail")[0].innerText;
-           $("#votefail")[0].innerText=parseInt(vfail)+1;
+			 vres='-- Error : --',err.message;
+			console.log('----------',vres);
+			var vfail=$("#votefail")[0].innerText;
+			   $("#votefail")[0].innerText=parseInt(vfail)+1;
+				vcolor='alert-danger'
 		}
 	else
 		{
-	console.log('block',voteresp.ref_block_num);
-   vres='bloque : ' + voteresp.ref_block_num;
+			console.log('block',voteresp.ref_block_num);
+		   vres='bloque : ' + voteresp.ref_block_num;
+			vcolor='alert-success'
 		}
 	
-steem.api.getAccounts([voter], function(err, response){
-       	AccInfo=response[0];
-});
-        var old_votingPw=AccInfo.voting_power/100;  
-        var vp='NC';
+		steem.api.getAccounts([voter], function(err, response){
+			console.log('---Accinfo response');
+				AccInfo=response[0];
+		});
+       
+        var vp='Not Available';
         if(AccInfo){
+        var old_votingPw=AccInfo.voting_power/100;  
         vp=	AccInfo.voting_power/100;
         }        
-         if( old_votingPw>vp){
-         	vcolor='alert-success'
-         }else{
-         	vcolor='alert-danger'
-         }
         var valert="<div class='alert " + vcolor +"'>" + vp + "</div>";
 		var d = new Date(); var ahora=d.getHours()+': '+ d.getMinutes() + ': ' + d.getSeconds()
-	 document.getElementById("votedtable").insertRow(1).innerHTML = ("<td>" + ahora +'</td><td>' +r.author 
-			+ '</td><td>'+ $("#VoteP").val() +'</td><td>'+ r.permlink+'</td><td>'+ vres+'</td><td>'+ valert +"</td>");
+	 document.getElementById("bodytabla").insertRow(0).innerHTML = ("<td>" + ahora +'</td><td>' +r.author 
+			+ '</td><td>'+ $("#VoteP").val() +'</td><td>'+ r.permlink+'</td><td  class="alert ' + vcolor +'">'+ vres+'</td><td >'+ vp +"</td>");
 
 
 			var vsuccess=$("#votesuccess")[0].innerText;
@@ -165,11 +173,13 @@ steem.api.getAccounts([voter], function(err, response){
 	
 	$("#votesuccess")[0].innerText=parseInt(vsuccess)+1;
 });
-	
-	
-	
-	
+
 }
+
+ 	
+	
+	
+
 
 
 function regvote(){

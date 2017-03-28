@@ -1,30 +1,42 @@
 var AccInfo=null 
 var r=null;
 
-function showAccountInfo2(){
+function CleanNav(){
+	$("#marcoaccinfo").hide();
+	$("#gethistory").hide();$("#voting").hide();
+	$("#Subscribe").hide();
+	$("#votbot").hide();
+	$("#accinfo").hide();
+	$("#inicio").hide();
+	
+	
+}
+
+
+function showAccountInfo(){
 	
       console.log($("#accsearch").val());
-      $("#marcoaccinfo").show();
+     
       $("#accinfo").show();
       var aux = null;
 
+      steem.api.getAccounts([$("#accsearch").val()], function(err, response){
 
-
-       steem.api.getAccounts([$("#accsearch").val()], function(err, response){
-
-       	nomadsteemAccInfo=response[0]; 
+      nomadsteemAccInfo=response[0]; 
             
        for (var key in response[0]){
-       	  //$("#cuerpo").append(aux);
+       	 
        	   if (!key.isArray){
            aux='<tr><td>' + key +'</td><td>' + response[0][key] +'</td></tr>' + aux;
        	   }
-       }
+        }
        
       $("#cuerpo").html(aux);
-  
+       console.log('--------inside ShowAccountInfo');
   })
-    }
+console.log('------getting account');
+
+}
 
 
 
@@ -46,44 +58,26 @@ steem.broadcast.vote(password, voter, author, permlink, weight, function(err, re
 });
 }
 
-  
-
-
-
-  
-
-function CleanNav(){
-	$("#marcoaccinfo").hide();$("#gettrend").hide();$("#voting").hide();
-	$("#Subscribe").hide();
-	$("#votbot").hide();
-	$("#accinfo").hide();
-	$("#inicio").hide();
-	
-	
-}
-
-
+ 
 function CheckVoted(){
 //last post by nomadsteem
       steem.api.getDiscussionsByAuthorBeforeDate('nomadsteem', '', '2018-03-20T20:27:30', 1, function(err, r) {
-  console.log(err, r);
+      console.log('---- last '+ err, r);
 
 
 for (var key in r[0].active_votes){
-       	  //$("#cuerpo").append(aux);$("#vvoteauth").val()
+       	  
        	   if (r[0].active_votes[key].voter=='steemalf'){
            vfound='true';
        	   }
        }
 
-     
-
+  
   if (vfound!='true'){
   	vote();
   }
-
-       discussions();
-       });
+    discussions();
+  });
 
 	
 }
@@ -102,30 +96,39 @@ function discussions(){
 
 	var query = {tag:vcatsel, limit:"30"}; 
 
-
-
-steem.api.getDiscussionsByCreated(query, function(err, result) {
-	console.log(Math.floor((Math.random() * 30) + 1));
-
-	votediscussion(result[Math.floor((Math.random() * 30) + 1)]);
-});
+	steem.api.getDiscussionsByCreated(query, function(err, result) {
+		var rndpost=Math.floor((Math.random() * 30) + 1);
+		console.log('--- post selected :' + rndpost);
+		votediscussion(result[rndpost]);
+	});
 }
 
 
 
 function votediscussion(r){
-	 console.log('voting');
+	 console.log('----voting');
 	 
 
-  var voter=$("#vvoteperm").val();
-  var username=$("#vvoteauth").val();
+
+  var voter=$("#bvoter").val();
+  var username=$("#busername").val();
   var password=$("#PostKey").val();//"";
 
+localStorage.setItem("voter", $("#bvoter").val());
+localStorage.setItem("username", $("#busername").val());
+localStorage.setItem("PostingKey", $("#PostKey").val());
 
+console.log(localStorage.voter )
 
 
   if(!r){
   	console.log ('--noo hay post ');
+  	var vfail=$("#votefail")[0].innerText;
+  	 $("#votefail")[0].innerText=parseInt(vfail)+1;
+  	 		var d = new Date(); var ahora=d.getHours()+': '+ d.getMinutes() + ': ' + d.getSeconds();
+  	  document.getElementById("bodytabla").insertRow(0).innerHTML = ("<td>" + ahora +'</td><td>' +'--'
+			+ '</td><td>'+ '----' +'</td><td>'+ '-----'+'</td><td  class="alert-danger"' +'">'+ 'error'+'</td><td >'+ 'error' +"</td>");
+  	return;
   }
 
   var author= r.author ;//$("#vvoteauthor").val();//"fisteganos";
@@ -255,4 +258,22 @@ function Feed(){
 steem.api.getFeedHistory(function(err, result) {
   console.log(err, result);
 });
+}
+
+
+function desayuno(food,drink,callback){
+	console.log('desayuno '+food + " y "+ drink);
+	if(callback && typeof(callback)==="function"){
+		callback()
+	}
+}
+
+function quedes(){
+	desayuno('cafe','pan',function(){
+	console.log('ya termine de desayunar')});
+	if (typeof(Storage) !== "undefined") {
+    console.log(' Code for localStorage/sessionStorage.');
+} else {
+    // Sorry! No Web Storage support..
+}
 }

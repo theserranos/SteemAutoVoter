@@ -1,15 +1,36 @@
 var AccInfo=null 
 var r=null;
 
-function CleanNav(){
-	$("#marcoaccinfo").hide();
-	$("#gethistory").hide();$("#voting").hide();
-	$("#Subscribe").hide();
-	$("#votbot").hide();
-	$("#accinfo").hide();
-	$("#inicio").hide();
-		
+function inicio(){
+	$("#inicio").show();
+	$("#bvoter").val(localStorage.voter);
+	$("#busername").val(localStorage.username);
+	$("#PostKey").val(localStorage.PostingKey);
+	$("#Tagfilter").val(localStorage.Tags);
+	$("#VoteP").val(localStorage.VotingPower);
+	$("#RefreshTime").val(localStorage.Reftime);
+
+	$('#PostKey').on('change', function() { 
+	  var isGoodWif=iswif($(this).val())
+	  if (isGoodWif===true){
+	   $(this).attr('class', 'form-control alert alert-success')} else
+	   {
+	   $(this).attr('class', 'form-control alert alert-danger')
+	   }
+	});
+		$('#navSett').on('click', function() { 
+	    $("#Settings").show();
+	 
+	});
+
 }
+
+
+
+function CleanNav(){
+	$('.container').hide();
+}
+
 
 
 function showAccountInfo(){
@@ -64,10 +85,8 @@ function CheckVoted(){
       var vfound='false';
       steem.api.getDiscussionsByAuthorBeforeDate('nomadsteem', '', '2018-03-20T20:27:30', 1, function(err, r) {
       console.log('---- last '+ err, r);
-      //vfound ='false';
-
+     
        for (var key in r[0].active_votes){
-       	  
        	   if (r[0].active_votes[key].voter=='nomadsteem'){
              vfound='true' ;
       	   }
@@ -76,8 +95,7 @@ function CheckVoted(){
   
   if (vfound!='true'){
   	vote(r[0]);
-  	// discussions();
-  } else {
+  	  } else {
     discussions();
   }
   });
@@ -164,6 +182,8 @@ steem.broadcast.vote(localStorage.PostingKey, localStorage.username, vpostselect
 				if(AccInfo){
 				var old_votingPw=AccInfo.voting_power/100;  
 				vp=	AccInfo.voting_power/100;
+				$("#ProgVotPow").html(vp + "%");
+				$("#ProgVotPow").width(vp + "%");
 				}    
 			document.getElementById("bodytabla").insertRow(0).innerHTML = ("<td>" + d +'</td><td>' +vpostselected.author 
 					+ '</td><td>'+ $("#VoteP").val() +'</td><td>'+ vpostselected.permlink+'</td><td  class="alert ' + vcolor +'">'+ vres+'</td><td >'+ vp +"</td>");
@@ -183,6 +203,54 @@ function regvote(){
 setTimeout(function(){ regvote(); }, $("#RefreshTime").val()*1000);
 }
 
+
+
+function getState(){ 
+  var aux = null;
+  steem.api.getState('/trends/funny', function(err, result) {
+	console.log(err, result['props']);
+       for (var key in result['props']){
+           aux='<tr><td>' + key +'</td><td>' + result['props'][key] +'</td></tr>' + aux;
+          console.log('--------- aux ' +aux);;
+       }
+       console.log('--------- aux ' +aux);
+   $("#cuerpogt").show();
+   $("#cuerpogt").html(aux);
+});
+
+}
+
+function getHistory(){
+  var aux = null;
+   $("#cuerpogt").html('Calculating');
+	steem.api.getAccountHistory($("#accsearch").val(), 10000,2000 , function(err, result) {
+	//console.log(err, result);
+	if (err){alert('error in history');return}
+      for (i = 1950; i <2001; i++){
+           aux='<tr><td>'+result[i][1].op[0]+ '---' +result[i][1].timestamp + '</td><td>' + JSON.stringify(result[i][1].op[1]) + '</td></tr>' + aux;
+        //JSON.stringify(result[i][1].op[1]) 
+       }
+       console.log('--------- aux ' +aux);
+   $("#cuerpogt").show();
+   $("#cuerpogt").html(aux);
+});
+
+  
+}
+
+
+function iswif(privWif){
+return(steem.auth.isWif(privWif));
+}
+
+function settings(){
+CleanNav();
+$("#Settings").show();
+}
+
+
+
+//-------------------------------------------------   tests
 
 function subscribe(){
 	CleanNav();$('#Subscribe').show();
@@ -207,37 +275,6 @@ var x=steem.api.setSubscribeCallback('1', '',devuelta);
 
 
 }
-function getState(){ 
-  var aux = null;
-  steem.api.getState('/trends/funny', function(err, result) {
-	console.log(err, result['props']);
-       for (var key in result['props']){
-           aux='<tr><td>' + key +'</td><td>' + result['props'][key] +'</td></tr>' + aux;
-          console.log('--------- aux ' +aux);;
-       }
-       console.log('--------- aux ' +aux);
-   $("#cuerpogt").show();
-   $("#cuerpogt").html(aux);
-});
-
-}
-
-function getHistory(){
-  var aux = null;
-	steem.api.getAccountHistory($("#vhistoryccount").val(), 3000,2000 , function(err, result) {
-	console.log(err, result);
-      for (i = 0; i < result.length; i++){
-           aux='<tr><td>' + JSON.stringify(result[i]) +'</td><td>' +'----'+'</td></tr>' + aux;
-        //JSON.stringify(result[i][1].op[1]) 
-       }
-       console.log('--------- aux ' +aux);
-   $("#cuerpogt").show();
-   $("#cuerpogt").html(aux);
-});
-
-  
-}
-
 
 
 function Feed(){
@@ -245,4 +282,22 @@ function Feed(){
 steem.api.getFeedHistory(function(err, result) {
   console.log(err, result);
 });
+}
+
+
+function desayuno(food,drink,callback){
+	console.log('desayuno '+food + " y "+ drink);
+	if(callback && typeof(callback)==="function"){
+		callback()
+	}
+}
+
+function quedes(){
+	desayuno('cafe','pan',function(){
+	console.log('ya termine de desayunar')});
+	if (typeof(Storage) !== "undefined") {
+    console.log(' Code for localStorage/sessionStorage.');
+} else {
+    // Sorry! No Web Storage support..
+}
 }

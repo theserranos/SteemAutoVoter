@@ -24,6 +24,7 @@
 	
       <li><a href="#" onclick="CleanNav();$('#votbot').show();">Voting Bot</a></li> 
       <li><a href="#" onclick="CleanNav();$('#gethistory').show()">Get Account History </a></li>
+	  <li><a href="#" onclick="CleanNav();subscribe()">Subscribe </a></li>
     
     </ul>
 
@@ -208,23 +209,16 @@
         
 </div>
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   <script>
 $(document).ready(function(){
 CleanNav();
 $("#inicio").show();
- $("#bvoter").val(localStorage.voter);
- $("#busername").val(localStorage.username);
-  $("#PostKey").val(localStorage.PostingKey);
+$("#bvoter").val(localStorage.voter);
+$("#busername").val(localStorage.username);
+$("#PostKey").val(localStorage.PostingKey);
+$("#Tagfilter").val(localStorage.Tags);
+$("#VoteP").val(localStorage.VotingPower);
+$("#RefreshTime").val(localStorage.Reftime);
 
 
 })</script>

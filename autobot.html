@@ -24,7 +24,7 @@
 	
       <li><a href="#" onclick="CleanNav();$('#votbot').show();">Voting Bot</a></li> 
       <li><a href="#" onclick="CleanNav();$('#gethistory').show()">Get Account History </a></li>
-	  <li><a href="#" onclick="CleanNav();subscribe()">Subscribe </a></li>
+	  <li><a href="#" onclick="CleanNav()">Subscribe </a></li>
     
     </ul>
 
@@ -40,7 +40,7 @@
 				</div>
 			  </div>
 			</form>
-      <li><a href="#"><span class="glyphicon glyphicon-wrench"></span> Settings</a></li>
+      <li ><a href="#" onclick="settings()"><span class="glyphicon glyphicon-wrench" ></span> Settings</a></li>
       
     </ul>
   </div>
@@ -65,7 +65,7 @@
   
     
  
-     <div class="container" id="accinfo">
+ <div class="container" id="accinfo">
   <p>Account details</p>            
   <table class="table" id ="accinfo">
     <thead>
@@ -89,16 +89,16 @@
   
      <br>
       <div class="row">
-    <div class="col-xs-3"><button type="button" class="btn btn-info" onclick="getHistory()">Get history  </button> </div>
-	<div class="col-xs-3"><button type="button" class="btn btn-info" onclick="quedes()">prueba desayuno  </button> </div>
+    <div class="col-md-6"><button type="button" class="btn btn-info" onclick="getHistory()">Get history  </button> </div>
+	
       </div>
   
     <hr>
   <p>Results table</p>            
-  <table class="table" id ="tablegt">
+  <table class="table "col-md-12" id ="tablegt">
     <thead>
       <tr>
-        <th>Key</th>
+        <th>Operation and Date </th>
         <th>Value</th>
        
       </tr>
@@ -112,69 +112,70 @@
   
   
   
-  
-  
-  
-  
-  
-  
-  
    <div class="container" id="votbot">
-    <h2 >Voting Bot</h2>
+      <h2 >Voting Bot</h2>
+	  <hr>
     
     <form>
-       <div class="row">
-      <div class="input-group  col-sm-6">
-        
-        <span class="input-group-addon">Voter  <i class="glyphicon glyphicon-user"></i></span>
-        <input id="bvoter" type="text" class="form-control col-sm-2" name="email" placeholder="nomadsteem">
-        <span class="input-group-addon">UserName<i class="glyphicon  glyphicon-user"></i></span>
-        <input id="busername" type="text" class="form-control col-sm-2" name="text" placeholder="nomadsteem">
-      </div>
-    <br>
-      </div>
+         <div class="row">
+			<div class="input-group  col-sm-6">
+			<span class="input-group-addon">Voter  <i class="glyphicon glyphicon-user"></i></span>
+			<input id="bvoter" type="text" class="form-control col-sm-2" name="email" placeholder="nomadsteem">
+			<span class="input-group-addon">UserName<i class="glyphicon  glyphicon-user"></i></span>
+			<input id="busername" type="text" class="form-control col-sm-2" name="text" placeholder="nomadsteem">
+			</div>
+			<br>
+        </div>
       
-       <div class="row">
-           <div class="input-group col-sm-10">
-        <span class="input-group-addon">Posting Key   <i class="glyphicon glyphicon-barcode"></i></span>
-        <input id="PostKey" type="text" class="form-control" name="PostKey" placeholder="5JiZuiBkaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-      </div>
-       </div>
+         <div class="row">
+		 <div class="input-group col-md-8">
+					   <span class="input-group-addon">Posting Key   <i class="glyphicon glyphicon-barcode"></i></span>
+					   <input id="PostKey" type="text" onl   class="form-control" name="PostKey" placeholder="5JiZuiBkaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+					 </div>
+          
+	     </div>
+	     <br>
+	    <div class="row">
+	         <div class="input-group col-sm-4">
+                 <span class="input-group-addon">Voting Power<i class="glyphicon glyphicon glyphicon-flash"></i></span>
+                  <input id="VoteP" type="text" class="form-control" name="email" placeholder="Voting Power">
+                 <span class="input-group-addon">Freq (seconds)<i class="glyphicon glyphicon-time"></i></span>
+        		 <input id="RefreshTime" type="text" class="form-control" name="text" placeholder="RefreshTime">
+				 
+			</div>
+        </div>
+	 
 	   <br>
-       <div class="row">
+        <div class="row">
            <div class="input-group col-sm-10">
-        <span class="input-group-addon">Tags   <i class="glyphicon glyphicon-tag"> </i></span>
-        <input id="Tagfilter" type="text" class="form-control" name="Tagfilter" placeholder="tabs filter (p,e, news)">
-      </div>
+				<span class="input-group-addon">Tags   <i class="glyphicon glyphicon-tag"> </i></span>
+				<input id="Tagfilter" type="text" class="form-control" name="Tagfilter" placeholder="tabs filter (p,e, news)">
+          </div>
 	  
-       </div>
-      <hr>
+        </div>
+         <hr>
     
             
    </form>
    
-      
-			         
-				  
-           <div class="input-group col-sm-4">
-                 <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-flash"></i></span>
-                  <input id="VoteP" type="text" class="form-control" name="email" placeholder="Voting Power">
-                 <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-        		 <input id="RefreshTime" type="text" class="form-control" name="text" placeholder="RefreshTime">
-
-				 
-			</div>
-			<br>
-			           <div class="row">
-					  <div class="col-sm-2">		 <button type="button" class="btn btn-info" onclick="regvote()">Launch Daemon   </button> </div>
-					  <div class="col-sm-6"></div>
-					   <div class="col-sm-1">  <span class="label label-success">Success <span class="badge" id="votesuccess">0</span></span></div> 
-					    <div class="col-sm-1">  <span class="label label-danger">Fail <span class="badge" id="votefail">0</span></span></div> 
-					  </div>
-              <br>
-	 <div class="row">
-
-     
+         
+	<br>
+		<div class="row">
+			<div class="col-sm-2">		 <button type="button" class="btn btn-info" onclick="regvote()">Launch Daemon   </button> </div>
+			 <div class="col-sm-6"></div>
+		 </div>
+           <br>
+			  
+	    <div class="row">
+          <div class="col-sm-8"></div>
+		  <div class="col-sm-2">
+		  
+		  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%" id="ProgVotPow"> 70%  </div>
+			
+		  </div>
+		  <div class="col-sm-1">  <span class="label label-success">Success <span class="badge" id="votesuccess">0</span></span></div> 
+		  <div class="col-sm-">  <span class="label label-danger">Fail <span class="badge" id="votefail">0</span></span></div> 
+            
         </div>
 	   <div class="row">  
 	 
@@ -184,44 +185,57 @@
 	 
  
    
-      <div class="row">
+     <div class="row">
   
-    <table class="table table-striped" id="votedtable">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Author</th>
-         <th>Pw</th>
-        <th>Permlink</th>
-         <th>Result</th>
-		  <th>Voting Power</th>
-        
-        
-      </tr>
-    </thead>
-    <tbody id="bodytabla">
-   
-   
-    
-    </tbody>
-  </table>
-        </div>
+		<table class="table table-striped" id="votedtable">
+		<thead>
+		  <tr>
+			<th>Date</th>
+			<th>Author</th>
+			<th>Pw</th>
+			<th>Permlink</th>
+			<th>Result</th>
+			<th>Voting Power</th>
+		   </tr>
+		</thead>
+		<tbody id="bodytabla"></tbody>
+		 </table>
+    </div>
         
 </div>
+  
+  <div class="container" id="Settings">
+          <div class="row">
+            <div class="col-md-8">
+                <div class="main-content">
+					 
+				
+				</div>
+            </div>
+            <div class="col-xs-4">
+                <!--Nested rows within a column-->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="sidebar-content">testing</div>
+                    </div>
+                </div>
+				<div class="row">
+                    <div class="col-xs-12">
+                        <div class="sidebar-content">testing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+     
   
   <script>
 $(document).ready(function(){
 CleanNav();
-$("#inicio").show();
-$("#bvoter").val(localStorage.voter);
-$("#busername").val(localStorage.username);
-$("#PostKey").val(localStorage.PostingKey);
-$("#Tagfilter").val(localStorage.Tags);
-$("#VoteP").val(localStorage.VotingPower);
-$("#RefreshTime").val(localStorage.Reftime);
-
-
+inicio()
 })</script>
   
 </body>
 </html>
+

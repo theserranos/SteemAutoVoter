@@ -1,5 +1,6 @@
 var AccInfo=null 
 var r=null;
+var Timer=null;
 
 function inicio(){
 	$("#inicio").show();
@@ -119,31 +120,23 @@ function discussions(){
 		var rndpost=Math.floor((Math.random() * 30) + 1);
 		console.log('--- post selected :' + rndpost);
 		var res=result[rndpost]
-		votediscussion(res);
+		votediscussion(res,vcatsel);
 		return;
 	});
 }
 
 
 
-function votediscussion(vpostselected){
+function votediscussion(vpostselected,categ){
 	 console.log('----voting');
-	 
-   	localStorage.setItem("voter", $("#bvoter").val());
-	localStorage.setItem("username", $("#busername").val());
-	localStorage.setItem("PostingKey", $("#PostKey").val());
-	localStorage.setItem("Tags", $("#Tagfilter").val());
-	localStorage.setItem("VotingPower", $("#VoteP").val());
-	localStorage.setItem("Reftime", $("#RefreshTime").val());
-
-
+	
   if(!vpostselected){
   	console.log ('--noo hay post ');
   	var vfail=$("#votefail")[0].innerText;
   	$("#votefail")[0].innerText=parseInt(vfail)+1;
   	var d = new Date(); var ahora=d.getHours()+': '+ d.getMinutes() + ': ' + d.getSeconds();
   	document.getElementById("bodytabla").insertRow(0).innerHTML = ("<td>" + ahora +'</td><td>' +'--'
-			+ '</td><td>'+ 'Could not find a random post to vote in ' +'</td><td>'+ '-----'+'</td><td  class="alert-danger"' +'">'+ 'error'+'</td><td >'+ 'error' +"</td>");
+			+ '</td><td>'+ 'Could not find a random post to vote in ' + categ +'</td><td>'+ '-----'+'</td><td  class="alert-danger"' +'">'+ 'error'+'</td><td >'+ 'error' +"</td>");
   	return;
   }
 
@@ -198,9 +191,50 @@ steem.broadcast.vote(localStorage.PostingKey, localStorage.username, vpostselect
 }
 
  	
+function LaunchDaemon(){
+      var vcheckinput=CheckInput();
+      if(vcheckinput!= 'correct'){
+        alert(vcheckinput);
+     	return
+     }
+
+	
+    if($("#daemonbut").text()=="Launch Daemon"){
+	$("#daemonbut").text('Stop Daemon');
+	$("#daemonbut").attr('class', 'btn btn-danger');
+	regvote();
+	 var Timer=setTimeout(function(){ regvote(); }, $("#RefreshTime").val()*1000);
+	
+	}else
+	{   
+    clearTimeout(Timer);
+    $("#daemonbut").text('Launch Daemon');
+	$("#daemonbut").attr('class', 'btn btn-success');
+
+	}      	
+}
+
+
+
 function regvote(){
+     
+    var vcheckinput=CheckInput();
+     
+     if(vcheckinput!= 'correct'){
+        alert(vcheckinput);
+     	return
+     }
+
+	localStorage.setItem("voter", $("#bvoter").val());
+	localStorage.setItem("username", $("#busername").val());
+	localStorage.setItem("PostingKey", $("#PostKey").val());
+	localStorage.setItem("Tags", $("#Tagfilter").val());
+	localStorage.setItem("VotingPower", $("#VoteP").val());
+	localStorage.setItem("Reftime", $("#RefreshTime").val());
+
 	CheckVoted();
-setTimeout(function(){ regvote(); }, $("#RefreshTime").val()*1000);
+	 
+
 }
 
 
@@ -243,6 +277,16 @@ function iswif(privWif){
 return(steem.auth.isWif(privWif));
 }
 
+function isValidAccount(naccount){
+steem.api.lookupAccountNames([naccount], function(err, result) {
+	if(!err){console.log('correct')};
+  console.log(err);
+});
+}
+
+
+
+
 function settings(){
 CleanNav();
 $("#Settings").show();
@@ -250,7 +294,7 @@ $("#Settings").show();
 
 
 
-//-------------------------------------------------   tests
+//-------------------------------------------------   tests 
 
 function subscribe(){
 	CleanNav();$('#Subscribe').show();
@@ -276,28 +320,37 @@ var x=steem.api.setSubscribeCallback('1', '',devuelta);
 
 }
 
-
-function Feed(){
-	CleanNav();$('#Subscribe').show();
-steem.api.getFeedHistory(function(err, result) {
-  console.log(err, result);
-});
-}
-
-
-function desayuno(food,drink,callback){
-	console.log('desayuno '+food + " y "+ drink);
-	if(callback && typeof(callback)==="function"){
-		callback()
+function CheckInput(){
+	if ($("#bvoter").val()===""){
+		return ("Please entry a voter")
 	}
+
+	/*var ValidAcc=isValidAccount($("#bvoter").val());
+
+    if(ValidAcc!='correct'){
+    	return ("Voter account is not valid ")
+    }*/
+
+
+
+	if ($("#busername").val()===""){
+		return ("Please entry a User name")
+	}
+
+	if (!iswif($("#PostKey").val())){
+		return ("Posting key is not valid")
+	}
+
+	if (isNaN($("#VoteP").val()) || $("#VoteP").val() >100){
+		return ("Voting Power should be numeric and lower than 100!")
+	}
+	
+	if (isNaN($("#RefreshTime").val())  || $("#VoteP").val()<0){
+		return ("Refresh Time Should be a valid number (p.e 60 secs)")
+	}
+    
+     return('correct');
+	
 }
 
-function quedes(){
-	desayuno('cafe','pan',function(){
-	console.log('ya termine de desayunar')});
-	if (typeof(Storage) !== "undefined") {
-    console.log(' Code for localStorage/sessionStorage.');
-} else {
-    // Sorry! No Web Storage support..
-}
-}
+

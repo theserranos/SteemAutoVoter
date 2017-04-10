@@ -128,7 +128,7 @@
         </div>
       
          <div class="row">
-		 <div class="input-group col-md-8">
+		 <div class="input-group col-md-6">
 					   <span class="input-group-addon">Posting Key   <i class="glyphicon glyphicon-barcode"></i></span>
 					   <input id="PostKey" type="text" onl   class="form-control" name="PostKey" placeholder="5JiZuiBkaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
 					 </div>
@@ -136,7 +136,7 @@
 	     </div>
 	     <br>
 	    <div class="row">
-	         <div class="input-group col-sm-4">
+	         <div class="input-group col-sm-6">
                  <span class="input-group-addon">Voting Power<i class="glyphicon glyphicon glyphicon-flash"></i></span>
                   <input id="VoteP" type="text" class="form-control" name="email" placeholder="Voting Power">
                  <span class="input-group-addon">Freq (seconds)<i class="glyphicon glyphicon-time"></i></span>
@@ -161,8 +161,15 @@
          
 	<br>
 		<div class="row">
-			<div class="col-sm-2">		 <button type="button" class="btn btn-info" onclick="regvote()">Launch Daemon   </button> </div>
-			 <div class="col-sm-6"></div>
+			<div class="col-sm-2"><button id="daemonbut" type="button" class="btn btn-success" onclick="LaunchDaemon()">Launch Daemon</button> </div>
+			 <div class="col-sm-4">
+			 <div class="panel panel-danger hidden">
+					<div class="panel-heading">
+						<h3 class="panel-title">New vote</h3>
+					</div>
+					<div class="panel-body">We have just sent a new vote .</div>
+				</div>
+			 </div>
 		 </div>
            <br>
 			  

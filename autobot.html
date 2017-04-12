@@ -9,6 +9,15 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
   <script src="functions.js"></script>
+   <script src="f2.js"></script>
+   <style>
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+ </style>
+   
 </head>
 <body>
 
@@ -22,7 +31,7 @@
 
     <ul class="nav navbar-nav">
 	
-      <li><a href="#" onclick="CleanNav();$('#votbot').show();">Voting Bot</a></li> 
+      <li><a href="#" onclick="CleanNav();$('#votbot').show();">Auto Voting Bot</a></li> 
       <li><a href="#" onclick="CleanNav();$('#gethistory').show()">Get Account History </a></li>
 	  <li><a href="#" onclick="CleanNav()">Subscribe </a></li>
     
@@ -116,9 +125,13 @@
       <h2 >Voting Bot</h2>
 	  <hr>
     
-    <form>
+	
+	<div class="row">
+	
+			<div class="col-sm-7">
+<form>
          <div class="row">
-			<div class="input-group  col-sm-6">
+			<div class="input-group  col-sm-10">
 			<span class="input-group-addon">Voter  <i class="glyphicon glyphicon-user"></i></span>
 			<input id="bvoter" type="text" class="form-control col-sm-2" name="email" placeholder="nomadsteem">
 			<span class="input-group-addon">UserName<i class="glyphicon  glyphicon-user"></i></span>
@@ -128,15 +141,16 @@
         </div>
       
          <div class="row">
-		 <div class="input-group col-md-6">
+		 <div class="input-group col-md-10">
 					   <span class="input-group-addon">Posting Key   <i class="glyphicon glyphicon-barcode"></i></span>
 					   <input id="PostKey" type="text" onl   class="form-control" name="PostKey" placeholder="5JiZuiBkaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
 					 </div>
           
 	     </div>
-	     <br>
+		 <br>
+	
 	    <div class="row">
-	         <div class="input-group col-sm-6">
+	         <div class="input-group col-sm-10">
                  <span class="input-group-addon">Voting Power<i class="glyphicon glyphicon glyphicon-flash"></i></span>
                   <input id="VoteP" type="text" class="form-control" name="email" placeholder="Voting Power">
                  <span class="input-group-addon">Freq (seconds)<i class="glyphicon glyphicon-time"></i></span>
@@ -149,19 +163,65 @@
         <div class="row">
            <div class="input-group col-sm-10">
 				<span class="input-group-addon">Tags   <i class="glyphicon glyphicon-tag"> </i></span>
-				<input id="Tagfilter" type="text" class="form-control" name="Tagfilter" placeholder="tabs filter (p,e, news)">
+				<textarea id="Tagfilter" type="text" rows="3" class="form-control" name="Tagfilter" placeholder="tabs filter (p,e, news)"></textarea>
           </div>
 	  
         </div>
-         <hr>
+       
     
             
    </form>
+   <hr>
+    <div class="row">
+   <div class="col-sm-3"><button id="daemonbut" type="button" class="btn btn-success" onclick="LaunchDaemon()">Launch Daemon</button> </div>
+    <div class="col-sm-3">
+   <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%" id="ProgVotPow"> 70%  </div>
+   </div>
+     <div class="col-sm-2">  <span class="label label-success">Success <span class="badge" id="votesuccess">0</span></span></div> 
+		  <div class="col-sm-2">  <span class="label label-danger">Fail <span class="badge" id="votefail">0</span></span></div> 
+   </div>
+    
+   
+   </div>
+   <div class="col-sm-5"> 
+<div id="myCarousel" class="carousel slide" data-ride="carousel" >
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#myCarousel" data-slide-to="1"></li>
+   
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox"  style="max-height: 350px";>
+  
+
+
+
+    <div class="item active">
+      <center><img id="profilephoto" src="http://poster.keepcalmandposters.com/thumbnail/5579233_404_profile_pic_not_found_keep_calm_and_code.png" alt="Flower"></center>
+    </div>
+  </div>
+
+  <!-- Left and right controls -->
+  <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+   </div>
+   </div>
+   
+			
    
          
 	<br>
 		<div class="row">
-			<div class="col-sm-2"><button id="daemonbut" type="button" class="btn btn-success" onclick="LaunchDaemon()">Launch Daemon</button> </div>
+			
 			 <div class="col-sm-4">
 			 <div class="panel panel-danger hidden">
 					<div class="panel-heading">
@@ -177,11 +237,10 @@
           <div class="col-sm-8"></div>
 		  <div class="col-sm-2">
 		  
-		  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%" id="ProgVotPow"> 70%  </div>
+		  
 			
 		  </div>
-		  <div class="col-sm-1">  <span class="label label-success">Success <span class="badge" id="votesuccess">0</span></span></div> 
-		  <div class="col-sm-">  <span class="label label-danger">Fail <span class="badge" id="votefail">0</span></span></div> 
+		
             
         </div>
 	   <div class="row">  
